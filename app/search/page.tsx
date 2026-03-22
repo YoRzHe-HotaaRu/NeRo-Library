@@ -110,6 +110,99 @@ function SearchContent() {
           </p>
           <SearchBar placeholder="Search for anime..." />
         </div>
+
+        <hr className="separator" />
+
+        {/* Search Tips */}
+        <div className="header-box" style={{ background: '#669966' }}>
+          Search Tips
+        </div>
+        <table style={{ width: '100%', background: '#f9f9f9', border: '1px solid #ddd' }}>
+          <tbody>
+            <tr>
+              <td style={{ width: '50%', verticalAlign: 'top', padding: '10px', borderRight: '1px solid #ddd' }}>
+                <div style={{ fontWeight: 'bold', marginBottom: '8px', fontSize: '12px' }}>What You Can Search:</div>
+                <ul style={{ fontSize: '11px', color: '#666', margin: 0, paddingLeft: '20px' }}>
+                  <li>Anime titles (English or Japanese)</li>
+                  <li>Partial names (e.g., "attack" for Attack on Titan)</li>
+                  <li>Studios (e.g., "Mappa", "Toei")</li>
+                  <li>Characters or themes</li>
+                </ul>
+              </td>
+              <td style={{ width: '50%', verticalAlign: 'top', padding: '10px' }}>
+                <div style={{ fontWeight: 'bold', marginBottom: '8px', fontSize: '12px' }}>After Searching:</div>
+                <ul style={{ fontSize: '11px', color: '#666', margin: 0, paddingLeft: '20px' }}>
+                  <li>Use filters to narrow results by Type, Status, or Rating</li>
+                  <li>Sort by Score, Popularity, or Title</li>
+                  <li>Set a minimum/maximum score range</li>
+                  <li>Click any anime to view full details</li>
+                </ul>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <hr className="separator" />
+
+        {/* Popular Searches */}
+        <div className="header-box" style={{ background: '#996633' }}>
+          Popular Searches
+        </div>
+        <div style={{ padding: '10px', background: '#f9f9f9', border: '1px solid #ddd', textAlign: 'center' }}>
+          <p style={{ fontSize: '11px', color: '#666', marginBottom: '10px' }}>Try searching for these popular anime:</p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', justifyContent: 'center' }}>
+            {['Naruto', 'One Piece', 'Attack on Titan', 'Dragon Ball', 'Death Note', 'Demon Slayer', 'My Hero Academia', 'Fullmetal Alchemist'].map((term) => (
+              <a 
+                key={term} 
+                href={`/search?q=${encodeURIComponent(term)}`}
+                style={{ 
+                  padding: '4px 10px', 
+                  background: '#eee', 
+                  border: '1px solid #ccc', 
+                  fontSize: '10px',
+                  textDecoration: 'none',
+                  color: '#333'
+                }}
+              >
+                {term}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <hr className="separator" />
+
+        {/* Browse Alternatives */}
+        <div className="header-box" style={{ background: '#cc6666' }}>
+          Or Browse By
+        </div>
+        <table style={{ width: '100%' }}>
+          <tbody>
+            <tr>
+              <td style={{ width: '33%', textAlign: 'center', padding: '15px' }}>
+                <div style={{ fontSize: '20px', marginBottom: '5px' }}>&#127919;</div>
+                <div style={{ fontWeight: 'bold', marginBottom: '5px' }}>Genre</div>
+                <a href="/genre">
+                  <button>Browse Genres</button>
+                </a>
+              </td>
+              <td style={{ width: '33%', textAlign: 'center', padding: '15px' }}>
+                <div style={{ fontSize: '20px', marginBottom: '5px' }}>&#127774;</div>
+                <div style={{ fontWeight: 'bold', marginBottom: '5px' }}>Season</div>
+                <a href="/seasons">
+                  <button>Browse Seasons</button>
+                </a>
+              </td>
+              <td style={{ width: '33%', textAlign: 'center', padding: '15px' }}>
+                <div style={{ fontSize: '20px', marginBottom: '5px' }}>&#127942;</div>
+                <div style={{ fontWeight: 'bold', marginBottom: '5px' }}>Top Rated</div>
+                <a href="/">
+                  <button>View Top Anime</button>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     );
   }
