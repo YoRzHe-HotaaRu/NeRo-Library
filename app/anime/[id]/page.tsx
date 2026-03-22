@@ -84,11 +84,12 @@ export default function AnimeDetailsPage() {
         })
       })
 
+      const data = await res.json()
+
       if (res.ok) {
         setLibraryStatus(status)
         setMessage('Added to library!')
       } else {
-        const data = await res.json()
         setMessage(data.error || 'Failed to add to library')
       }
     } catch (error) {
@@ -122,6 +123,14 @@ export default function AnimeDetailsPage() {
 
   const title = anime.title_english || anime.title;
   const imageUrl = anime.images?.jpg?.large_image_url || anime.images?.jpg?.image_url;
+
+  const libraryButtons = [
+    { status: 'watching', icon: '&#9654;', label: 'Watching', color: '#4CAF50' },
+    { status: 'completed', icon: '&#10003;', label: 'Completed', color: '#2196F3' },
+    { status: 'plan_to_watch', icon: '&#9734;', label: 'Plan to Watch', color: '#FF9800' },
+    { status: 'on_hold', icon: '&#9208;', label: 'On Hold', color: '#9C27B0' },
+    { status: 'dropped', icon: '&#10005;', label: 'Dropped', color: '#f44336' }
+  ];
 
   return (
     <div>
@@ -170,56 +179,72 @@ export default function AnimeDetailsPage() {
                 </div>
               )}
 
-              {/* Add to Library */}
-              <div style={{ marginTop: '10px', padding: '8px', background: '#f9f9f9', border: '1px solid #ddd' }}>
+              {/* Add to Library - Compact Icon Style */}
+              <div style={{ marginTop: '8px', padding: '6px', background: '#f9f9f9', border: '1px solid #ddd' }}>
                 {session ? (
                   <>
                     {libraryStatus ? (
-                      <div style={{ textAlign: 'center', fontSize: '11px' }}>
-                        <div style={{ color: '#669966', fontWeight: 'bold', marginBottom: '5px' }}>
-                          In Library: {libraryStatus.replace('_', ' ')}
+                      <div style={{ textAlign: 'center', fontSize: '10px' }}>
+                        <div style={{ 
+                          color: libraryButtons.find(b => b.status === libraryStatus)?.color || '#669966', 
+                          fontWeight: 'bold', 
+                          marginBottom: '4px',
+                          fontSize: '11px'
+                        }}>
+                          &#10003; {libraryStatus.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                         </div>
-                        <Link href="/library">View Library</Link>
+                        <Link href="/library" style={{ fontSize: '10px' }}>View Library</Link>
                       </div>
                     ) : (
                       <>
-                        <div style={{ fontSize: '11px', fontWeight: 'bold', marginBottom: '5px', textAlign: 'center' }}>
-                          Add to Library:
+                        <div style={{ fontSize: '10px', fontWeight: 'bold', marginBottom: '4px', textAlign: 'center' }}>
+                          + Add to Library
                         </div>
                         {message && (
-                          <div style={{ fontSize: '10px', color: message.includes('Added') ? '#669966' : '#cc0000', marginBottom: '5px', textAlign: 'center' }}>
+                          <div style={{ 
+                            fontSize: '9px', 
+                            color: message.includes('Added') ? '#669966' : '#cc0000', 
+                            marginBottom: '4px', 
+                            textAlign: 'center' 
+                          }}>
                             {message}
                           </div>
                         )}
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                          <button 
-                            onClick={() => addToLibrary('watching')} 
-                            disabled={addingToLibrary}
-                            style={{ fontSize: '10px', width: '100%' }}
-                          >
-                            Watching
-                          </button>
-                          <button 
-                            onClick={() => addToLibrary('completed')} 
-                            disabled={addingToLibrary}
-                            style={{ fontSize: '10px', width: '100%' }}
-                          >
-                            Completed
-                          </button>
-                          <button 
-                            onClick={() => addToLibrary('plan_to_watch')} 
-                            disabled={addingToLibrary}
-                            style={{ fontSize: '10px', width: '100%' }}
-                          >
-                            Plan to Watch
-                          </button>
+                        <div style={{ display: 'flex', gap: '3px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                          {libraryButtons.map((btn) => (
+                            <button
+                              key={btn.status}
+                              onClick={() => addToLibrary(btn.status)}
+                              disabled={addingToLibrary}
+                              title={btn.label}
+                              style={{ 
+                                fontSize: '14px', 
+                                padding: '4px 6px',
+                                background: btn.color,
+                                color: 'white',
+                                border: '1px solid #999',
+                                cursor: 'pointer',
+                                lineHeight: 1,
+                                minWidth: '28px',
+                                opacity: addingToLibrary ? 0.5 : 1
+                              }}
+                              dangerouslySetInnerHTML={{ __html: btn.icon }}
+                            />
+                          ))}
+                        </div>
+                        <div style={{ display: 'flex', gap: '2px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '3px' }}>
+                          {libraryButtons.map((btn) => (
+                            <span key={btn.status} style={{ fontSize: '8px', color: '#999', width: '28px', textAlign: 'center' }}>
+                              {btn.label.split(' ')[0]}
+                            </span>
+                          ))}
                         </div>
                       </>
                     )}
                   </>
                 ) : (
                   <div style={{ textAlign: 'center', fontSize: '10px' }}>
-                    <Link href="/login">Login</Link> to save to library
+                    <Link href="/login">Login</Link> to save
                   </div>
                 )}
               </div>
