@@ -117,7 +117,7 @@ function GenreContent() {
         </div>
 
         {/* Filters */}
-        <div className="filter-grid">
+        <div className="filter-row">
           <div className="filter-item">
             <div style={{ fontSize: '10px', fontWeight: 'bold', marginBottom: '3px' }}>Type:</div>
             <select value={searchParams.get('type') || ''} onChange={(e) => handleFilterChange('type', e.target.value)} style={{ width: '100%', fontSize: '10px' }}>
@@ -128,15 +128,6 @@ function GenreContent() {
               <option value="special">Special</option>
               <option value="ona">ONA</option>
               <option value="music">Music</option>
-            </select>
-          </div>
-          <div className="filter-item">
-            <div style={{ fontSize: '10px', fontWeight: 'bold', marginBottom: '3px' }}>Status:</div>
-            <select value={searchParams.get('status') || ''} onChange={(e) => handleFilterChange('status', e.target.value)} style={{ width: '100%', fontSize: '10px' }}>
-              <option value="">All</option>
-              <option value="airing">Airing</option>
-              <option value="complete">Completed</option>
-              <option value="upcoming">Upcoming</option>
             </select>
           </div>
           <div className="filter-item">
@@ -169,12 +160,12 @@ function GenreContent() {
               <option value="asc">Ascending</option>
             </select>
           </div>
-          <div className="filter-item filter-item-wide">
+          <div className="filter-item">
             <div style={{ fontSize: '10px', fontWeight: 'bold', marginBottom: '3px' }}>Score Range:</div>
             <div style={{ display: 'flex', gap: '3px', alignItems: 'center' }}>
-              <input type="number" min="0" max="10" step="0.5" value={searchParams.get('min_score') || ''} onChange={(e) => handleFilterChange('min_score', e.target.value)} placeholder="Min" style={{ width: '45%', fontSize: '10px' }} />
+              <input type="number" min="0" max="10" step="0.5" value={searchParams.get('min_score') || ''} onChange={(e) => handleFilterChange('min_score', e.target.value)} placeholder="Min" style={{ width: '50px', fontSize: '10px' }} />
               <span style={{ fontSize: '10px' }}>-</span>
-              <input type="number" min="0" max="10" step="0.5" value={searchParams.get('max_score') || ''} onChange={(e) => handleFilterChange('max_score', e.target.value)} placeholder="Max" style={{ width: '45%', fontSize: '10px' }} />
+              <input type="number" min="0" max="10" step="0.5" value={searchParams.get('max_score') || ''} onChange={(e) => handleFilterChange('max_score', e.target.value)} placeholder="Max" style={{ width: '50px', fontSize: '10px' }} />
             </div>
           </div>
         </div>
@@ -191,42 +182,29 @@ function GenreContent() {
       )}
 
       <style jsx>{`
-        .filter-grid {
-          display: grid;
-          grid-template-columns: repeat(6, 1fr);
+        .filter-row {
+          display: flex;
+          flex-wrap: wrap;
           gap: 5px;
-          background: #eee;
-          border: 1px solid #ccc;
-          padding: 5px;
+          align-items: flex-end;
         }
 
         .filter-item {
+          flex: 1;
+          min-width: 80px;
           background: white;
           border: 1px solid #ddd;
           padding: 5px;
         }
 
-        .filter-item-wide {
-          grid-column: span 2;
-        }
-
-        @media (max-width: 768px) {
-          .filter-grid {
-            grid-template-columns: repeat(3, 1fr);
+        @media (max-width: 600px) {
+          .filter-row {
+            flex-wrap: wrap;
           }
 
-          .filter-item-wide {
-            grid-column: span 3;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .filter-grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
-
-          .filter-item-wide {
-            grid-column: span 2;
+          .filter-item {
+            flex: 0 0 calc(50% - 5px);
+            min-width: 120px;
           }
         }
       `}</style>

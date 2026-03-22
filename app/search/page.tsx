@@ -21,15 +21,6 @@ function SearchContent() {
   const [hasNextPage, setHasNextPage] = useState(false);
   const [totalResults, setTotalResults] = useState(0);
 
-  // Filters
-  const [type, setType] = useState(searchParams.get('type') || '');
-  const [status, setStatus] = useState(searchParams.get('status') || '');
-  const [rating, setRating] = useState(searchParams.get('rating') || '');
-  const [orderBy, setOrderBy] = useState(searchParams.get('order_by') || 'score');
-  const [sort, setSort] = useState(searchParams.get('sort') || 'desc');
-  const [minScore, setMinScore] = useState(searchParams.get('min_score') || '');
-  const [maxScore, setMaxScore] = useState(searchParams.get('max_score') || '');
-
   useEffect(() => {
     async function fetchSearchResults() {
       if (!query.trim()) {
@@ -46,13 +37,13 @@ function SearchContent() {
           query,
           page,
           limit: 25,
-          type: type || undefined,
-          status: status || undefined,
-          rating: rating || undefined,
-          orderBy: orderBy || undefined,
-          sort: sort || undefined,
-          minScore: minScore || undefined,
-          maxScore: maxScore || undefined
+          type: searchParams.get('type') || undefined,
+          status: searchParams.get('status') || undefined,
+          rating: searchParams.get('rating') || undefined,
+          orderBy: searchParams.get('order_by') || 'score',
+          sort: searchParams.get('sort') || 'desc',
+          minScore: searchParams.get('min_score') || undefined,
+          maxScore: searchParams.get('max_score') || undefined
         };
 
         const response = await searchAnime(filters);
@@ -70,32 +61,17 @@ function SearchContent() {
     }
 
     fetchSearchResults();
-  }, [query, page, type, status, rating, orderBy, sort, minScore, maxScore]);
-
-  const buildFilterPath = (newParams: Record<string, string>) => {
-    const params = new URLSearchParams(searchParams);
-    params.set('page', '1');
-    Object.entries(newParams).forEach(([key, value]) => {
-      if (value) {
-        params.set(key, value);
-      } else {
-        params.delete(key);
-      }
-    });
-    return `/search?${params.toString()}`;
-  };
+  }, [query, page, searchParams]);
 
   const handleFilterChange = (key: string, value: string) => {
-    switch (key) {
-      case 'type': setType(value); break;
-      case 'status': setStatus(value); break;
-      case 'rating': setRating(value); break;
-      case 'orderBy': setOrderBy(value); break;
-      case 'sort': setSort(value); break;
-      case 'minScore': setMinScore(value); break;
-      case 'maxScore': setMaxScore(value); break;
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('page', '1');
+    if (value) {
+      params.set(key, value);
+    } else {
+      params.delete(key);
     }
-    router.push(buildFilterPath({ [key]: value }));
+    router.push(`/search?${params.toString()}`);
   };
 
   if (!query.trim()) {
@@ -218,18 +194,18 @@ function SearchContent() {
           <SearchBar placeholder="Search for anime..." />
         </div>
         
-        <div style={{ fontSize: '11px', marginBottom: '5px', fontWeight: 'bold' }}>
+        <div style={{ fontSize: '11px', marginBottom: '10px', fontWeight: 'bold' }}>
           {totalResults > 0 
             ? `Found ${totalResults} results for "${query}"`
             : `No results found for "${query}"`
           }
         </div>
 
-        {/* Filters - Responsive Grid */}
-        <div className="filter-grid">
+        {/* Filters */}
+        <div className="filter-row">
           <div className="filter-item">
             <div style={{ fontSize: '10px', fontWeight: 'bold', marginBottom: '3px' }}>Type:</div>
-            <select value={type} onChange={(e) => handleFilterChange('type', e.target.value)} style={{ width: '100%', fontSize: '10px' }}>
+            <select value={searchParams.get('type') || ''} onChange={(e) => handleFilterChange('type', e.target.value)} style={{ width: '100%', fontSize: '10px' }}>
               <option value="">All</option>
               <option value="tv">TV</option>
               <option value="movie">Movie</option>
@@ -240,17 +216,8 @@ function SearchContent() {
             </select>
           </div>
           <div className="filter-item">
-            <div style={{ fontSize: '10px', fontWeight: 'bold', marginBottom: '3px' }}>Status:</div>
-            <select value={status} onChange={(e) => handleFilterChange('status', e.target.value)} style={{ width: '100%', fontSize: '10px' }}>
-              <option value="">All</option>
-              <option value="airing">Airing</option>
-              <option value="complete">Completed</option>
-              <option value="upcoming">Upcoming</option>
-            </select>
-          </div>
-          <div className="filter-item">
             <div style={{ fontSize: '10px', fontWeight: 'bold', marginBottom: '3px' }}>Rating:</div>
-            <select value={rating} onChange={(e) => handleFilterChange('rating', e.target.value)} style={{ width: '100%', fontSize: '10px' }}>
+            <select value={searchParams.get('rating') || ''} onChange={(e) => handleFilterChange('rating', e.target.value)} style={{ width: '100%', fontSize: '10px' }}>
               <option value="">All</option>
               <option value="g">G - All Ages</option>
               <option value="pg">PG - Children</option>
@@ -261,29 +228,27 @@ function SearchContent() {
           </div>
           <div className="filter-item">
             <div style={{ fontSize: '10px', fontWeight: 'bold', marginBottom: '3px' }}>Sort By:</div>
-            <select value={orderBy} onChange={(e) => handleFilterChange('orderBy', e.target.value)} style={{ width: '100%', fontSize: '10px' }}>
+            <select value={searchParams.get('order_by') || 'score'} onChange={(e) => handleFilterChange('order_by', e.target.value)} style={{ width: '100%', fontSize: '10px' }}>
               <option value="score">Score</option>
               <option value="popularity">Popularity</option>
               <option value="title">Title</option>
               <option value="members">Members</option>
               <option value="favorites">Favorites</option>
-              <option value="episodes">Episodes</option>
-              <option value="start_date">Start Date</option>
             </select>
           </div>
           <div className="filter-item">
             <div style={{ fontSize: '10px', fontWeight: 'bold', marginBottom: '3px' }}>Order:</div>
-            <select value={sort} onChange={(e) => handleFilterChange('sort', e.target.value)} style={{ width: '100%', fontSize: '10px' }}>
+            <select value={searchParams.get('sort') || 'desc'} onChange={(e) => handleFilterChange('sort', e.target.value)} style={{ width: '100%', fontSize: '10px' }}>
               <option value="desc">Descending</option>
               <option value="asc">Ascending</option>
             </select>
           </div>
-          <div className="filter-item filter-item-wide">
+          <div className="filter-item">
             <div style={{ fontSize: '10px', fontWeight: 'bold', marginBottom: '3px' }}>Score Range:</div>
             <div style={{ display: 'flex', gap: '3px', alignItems: 'center' }}>
-              <input type="number" min="0" max="10" step="0.5" value={minScore} onChange={(e) => handleFilterChange('minScore', e.target.value)} placeholder="Min" style={{ width: '45%', fontSize: '10px' }} />
+              <input type="number" min="0" max="10" step="0.5" value={searchParams.get('min_score') || ''} onChange={(e) => handleFilterChange('min_score', e.target.value)} placeholder="Min" style={{ width: '50px', fontSize: '10px' }} />
               <span style={{ fontSize: '10px' }}>-</span>
-              <input type="number" min="0" max="10" step="0.5" value={maxScore} onChange={(e) => handleFilterChange('maxScore', e.target.value)} placeholder="Max" style={{ width: '45%', fontSize: '10px' }} />
+              <input type="number" min="0" max="10" step="0.5" value={searchParams.get('max_score') || ''} onChange={(e) => handleFilterChange('max_score', e.target.value)} placeholder="Max" style={{ width: '50px', fontSize: '10px' }} />
             </div>
           </div>
         </div>
@@ -313,42 +278,29 @@ function SearchContent() {
       )}
 
       <style jsx>{`
-        .filter-grid {
-          display: grid;
-          grid-template-columns: repeat(6, 1fr);
+        .filter-row {
+          display: flex;
+          flex-wrap: wrap;
           gap: 5px;
-          background: #eee;
-          border: 1px solid #ccc;
-          padding: 5px;
+          align-items: flex-end;
         }
 
         .filter-item {
+          flex: 1;
+          min-width: 80px;
           background: white;
           border: 1px solid #ddd;
           padding: 5px;
         }
 
-        .filter-item-wide {
-          grid-column: span 2;
-        }
-
-        @media (max-width: 768px) {
-          .filter-grid {
-            grid-template-columns: repeat(3, 1fr);
+        @media (max-width: 600px) {
+          .filter-row {
+            flex-wrap: wrap;
           }
 
-          .filter-item-wide {
-            grid-column: span 3;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .filter-grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
-
-          .filter-item-wide {
-            grid-column: span 2;
+          .filter-item {
+            flex: 0 0 calc(50% - 5px);
+            min-width: 120px;
           }
         }
       `}</style>
