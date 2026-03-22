@@ -24,8 +24,10 @@ export default function RootLayout({
           <div className="container">
             {/* Header */}
             <div className="content-box" style={{ background: '#336699', color: 'white', textAlign: 'center', padding: '15px' }}>
-              <div style={{ fontSize: '24px', fontFamily: 'Georgia, serif', fontWeight: 'bold', letterSpacing: '2px' }}>
-                NeRo Library
+              <div className="logo-text">
+                <span className="logo-n">N</span><span className="logo-e">e</span><span className="logo-r">R</span><span className="logo-o">o</span>
+                <span className="logo-space"> </span>
+                Library<span className="logo-cursor">|</span>
               </div>
               <div style={{ fontSize: '11px', marginTop: '4px', color: '#ccddff' }}>
                 Browse and Search Anime Catalog
@@ -59,6 +61,55 @@ export default function RootLayout({
             </div>
           </div>
         </AuthProvider>
+
+        <style jsx global>{`
+          .logo-text {
+            font-size: 24px;
+            font-family: Georgia, serif;
+            font-weight: bold;
+            letter-spacing: 2px;
+          }
+
+          .logo-n, .logo-e, .logo-r, .logo-o {
+            display: inline-block;
+            animation: letterBounce 2s ease-in-out infinite;
+          }
+
+          .logo-n { animation-delay: 0s; }
+          .logo-e { animation-delay: 0.15s; }
+          .logo-r { animation-delay: 0.3s; }
+          .logo-o { animation-delay: 0.45s; }
+
+          .logo-space {
+            display: inline-block;
+            width: 8px;
+          }
+
+          .logo-cursor {
+            display: inline-block;
+            animation: blink 0.8s step-end infinite;
+            color: #ccddff;
+            margin-left: 2px;
+          }
+
+          @keyframes letterBounce {
+            0%, 100% {
+              transform: translateY(0);
+            }
+            50% {
+              transform: translateY(-4px);
+            }
+          }
+
+          @keyframes blink {
+            0%, 100% {
+              opacity: 1;
+            }
+            50% {
+              opacity: 0;
+            }
+          }
+        `}</style>
       </body>
     </html>
   )
