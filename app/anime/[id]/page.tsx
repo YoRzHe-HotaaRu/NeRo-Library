@@ -125,11 +125,11 @@ export default function AnimeDetailsPage() {
   const imageUrl = anime.images?.jpg?.large_image_url || anime.images?.jpg?.image_url;
 
   const libraryButtons = [
-    { status: 'watching', icon: '&#9654;', label: 'Watching', color: '#4CAF50' },
-    { status: 'completed', icon: '&#10003;', label: 'Completed', color: '#2196F3' },
-    { status: 'plan_to_watch', icon: '&#9734;', label: 'Plan to Watch', color: '#FF9800' },
-    { status: 'on_hold', icon: '&#9208;', label: 'On Hold', color: '#9C27B0' },
-    { status: 'dropped', icon: '&#10005;', label: 'Dropped', color: '#f44336' }
+    { status: 'watching', icon: '&#9654;', label: 'Watch', color: '#4CAF50' },
+    { status: 'completed', icon: '&#10003;', label: 'Done', color: '#2196F3' },
+    { status: 'plan_to_watch', icon: '&#9734;', label: 'Plan', color: '#FF9800' },
+    { status: 'on_hold', icon: '&#9208;', label: 'Hold', color: '#9C27B0' },
+    { status: 'dropped', icon: '&#10005;', label: 'Drop', color: '#f44336' }
   ];
 
   return (
