@@ -1,7 +1,7 @@
 # NeRo Library
 
 A simple website to browse, search, and discover anime series and movies.
-
+Made by: YiorZhe and Shiouko
 ---
 
 ## What Is This?
