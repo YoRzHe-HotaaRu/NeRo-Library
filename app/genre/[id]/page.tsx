@@ -23,15 +23,6 @@ function GenreContent() {
   const [hasNextPage, setHasNextPage] = useState(false);
   const [totalResults, setTotalResults] = useState(0);
 
-  // Filters
-  const [type, setType] = useState(searchParams.get('type') || '');
-  const [status, setStatus] = useState(searchParams.get('status') || '');
-  const [rating, setRating] = useState(searchParams.get('rating') || '');
-  const [orderBy, setOrderBy] = useState(searchParams.get('order_by') || 'score');
-  const [sort, setSort] = useState(searchParams.get('sort') || 'desc');
-  const [minScore, setMinScore] = useState(searchParams.get('min_score') || '');
-  const [maxScore, setMaxScore] = useState(searchParams.get('max_score') || '');
-
   useEffect(() => {
     async function fetchGenreData() {
       if (!genreId) return;
@@ -44,13 +35,13 @@ function GenreContent() {
           genreId: parseInt(genreId),
           page,
           limit: 25,
-          type: type || undefined,
-          status: status || undefined,
-          rating: rating || undefined,
-          orderBy: orderBy || undefined,
-          sort: sort || undefined,
-          minScore: minScore || undefined,
-          maxScore: maxScore || undefined
+          type: searchParams.get('type') || undefined,
+          status: searchParams.get('status') || undefined,
+          rating: searchParams.get('rating') || undefined,
+          orderBy: searchParams.get('order_by') || 'score',
+          sort: searchParams.get('sort') || 'desc',
+          minScore: searchParams.get('min_score') || undefined,
+          maxScore: searchParams.get('max_score') || undefined
         };
 
         const [genresResponse, animeResponse] = await Promise.all([
@@ -75,13 +66,13 @@ function GenreContent() {
     }
 
     fetchGenreData();
-  }, [genreId, page, type, status, rating, orderBy, sort, minScore, maxScore]);
+  }, [genreId, page, searchParams]);
 
   const handleFilterChange = (key: string, value: string) => {
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams.toString());
     params.set('page', '1');
     if (value) {
-      params.set(key, value);
+      params.set(key, key === 'order_by' ? value : value);
     } else {
       params.delete(key);
     }
@@ -112,12 +103,10 @@ function GenreContent() {
 
   return (
     <div>
-      {/* Back Link */}
       <div style={{ marginBottom: '10px', fontSize: '11px' }}>
         <Link href="/genre">&lt;&lt; Back to Genres</Link>
       </div>
 
-      {/* Genre Header */}
       <div className="header-box" style={{ background: '#336699' }}>
         {genre.name}
       </div>
@@ -128,77 +117,71 @@ function GenreContent() {
         </div>
 
         {/* Filters */}
-        <table style={{ width: '100%', background: '#eee', border: '1px solid #ccc' }}>
-          <tbody>
-            <tr>
-              <td style={{ border: '1px solid #ccc', padding: '5px', width: '16%' }}>
-                <div style={{ fontSize: '10px', fontWeight: 'bold', marginBottom: '3px' }}>Type:</div>
-                <select value={type} onChange={(e) => handleFilterChange('type', e.target.value)} style={{ width: '100%', fontSize: '10px' }}>
-                  <option value="">All</option>
-                  <option value="tv">TV</option>
-                  <option value="movie">Movie</option>
-                  <option value="ova">OVA</option>
-                  <option value="special">Special</option>
-                  <option value="ona">ONA</option>
-                  <option value="music">Music</option>
-                </select>
-              </td>
-              <td style={{ border: '1px solid #ccc', padding: '5px', width: '16%' }}>
-                <div style={{ fontSize: '10px', fontWeight: 'bold', marginBottom: '3px' }}>Status:</div>
-                <select value={status} onChange={(e) => handleFilterChange('status', e.target.value)} style={{ width: '100%', fontSize: '10px' }}>
-                  <option value="">All</option>
-                  <option value="airing">Airing</option>
-                  <option value="complete">Completed</option>
-                  <option value="upcoming">Upcoming</option>
-                </select>
-              </td>
-              <td style={{ border: '1px solid #ccc', padding: '5px', width: '16%' }}>
-                <div style={{ fontSize: '10px', fontWeight: 'bold', marginBottom: '3px' }}>Rating:</div>
-                <select value={rating} onChange={(e) => handleFilterChange('rating', e.target.value)} style={{ width: '100%', fontSize: '10px' }}>
-                  <option value="">All</option>
-                  <option value="g">G - All Ages</option>
-                  <option value="pg">PG - Children</option>
-                  <option value="pg13">PG-13 - Teens</option>
-                  <option value="r17">R-17+</option>
-                  <option value="r">R+ - Mild Nudity</option>
-                </select>
-              </td>
-              <td style={{ border: '1px solid #ccc', padding: '5px', width: '16%' }}>
-                <div style={{ fontSize: '10px', fontWeight: 'bold', marginBottom: '3px' }}>Sort By:</div>
-                <select value={orderBy} onChange={(e) => handleFilterChange('orderBy', e.target.value)} style={{ width: '100%', fontSize: '10px' }}>
-                  <option value="score">Score</option>
-                  <option value="popularity">Popularity</option>
-                  <option value="title">Title</option>
-                  <option value="members">Members</option>
-                  <option value="favorites">Favorites</option>
-                  <option value="episodes">Episodes</option>
-                  <option value="start_date">Start Date</option>
-                </select>
-              </td>
-              <td style={{ border: '1px solid #ccc', padding: '5px', width: '16%' }}>
-                <div style={{ fontSize: '10px', fontWeight: 'bold', marginBottom: '3px' }}>Order:</div>
-                <select value={sort} onChange={(e) => handleFilterChange('sort', e.target.value)} style={{ width: '100%', fontSize: '10px' }}>
-                  <option value="desc">Descending</option>
-                  <option value="asc">Ascending</option>
-                </select>
-              </td>
-              <td style={{ border: '1px solid #ccc', padding: '5px', width: '20%' }}>
-                <div style={{ fontSize: '10px', fontWeight: 'bold', marginBottom: '3px' }}>Score Range:</div>
-                <div style={{ display: 'flex', gap: '3px', alignItems: 'center' }}>
-                  <input type="number" min="0" max="10" step="0.5" value={minScore} onChange={(e) => handleFilterChange('minScore', e.target.value)} placeholder="Min" style={{ width: '45%', fontSize: '10px' }} />
-                  <span style={{ fontSize: '10px' }}>-</span>
-                  <input type="number" min="0" max="10" step="0.5" value={maxScore} onChange={(e) => handleFilterChange('maxScore', e.target.value)} placeholder="Max" style={{ width: '45%', fontSize: '10px' }} />
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="filter-grid">
+          <div className="filter-item">
+            <div style={{ fontSize: '10px', fontWeight: 'bold', marginBottom: '3px' }}>Type:</div>
+            <select value={searchParams.get('type') || ''} onChange={(e) => handleFilterChange('type', e.target.value)} style={{ width: '100%', fontSize: '10px' }}>
+              <option value="">All</option>
+              <option value="tv">TV</option>
+              <option value="movie">Movie</option>
+              <option value="ova">OVA</option>
+              <option value="special">Special</option>
+              <option value="ona">ONA</option>
+              <option value="music">Music</option>
+            </select>
+          </div>
+          <div className="filter-item">
+            <div style={{ fontSize: '10px', fontWeight: 'bold', marginBottom: '3px' }}>Status:</div>
+            <select value={searchParams.get('status') || ''} onChange={(e) => handleFilterChange('status', e.target.value)} style={{ width: '100%', fontSize: '10px' }}>
+              <option value="">All</option>
+              <option value="airing">Airing</option>
+              <option value="complete">Completed</option>
+              <option value="upcoming">Upcoming</option>
+            </select>
+          </div>
+          <div className="filter-item">
+            <div style={{ fontSize: '10px', fontWeight: 'bold', marginBottom: '3px' }}>Rating:</div>
+            <select value={searchParams.get('rating') || ''} onChange={(e) => handleFilterChange('rating', e.target.value)} style={{ width: '100%', fontSize: '10px' }}>
+              <option value="">All</option>
+              <option value="g">G - All Ages</option>
+              <option value="pg">PG - Children</option>
+              <option value="pg13">PG-13 - Teens</option>
+              <option value="r17">R-17+</option>
+              <option value="r">R+ - Mild Nudity</option>
+            </select>
+          </div>
+          <div className="filter-item">
+            <div style={{ fontSize: '10px', fontWeight: 'bold', marginBottom: '3px' }}>Sort By:</div>
+            <select value={searchParams.get('order_by') || 'score'} onChange={(e) => handleFilterChange('order_by', e.target.value)} style={{ width: '100%', fontSize: '10px' }}>
+              <option value="score">Score</option>
+              <option value="popularity">Popularity</option>
+              <option value="title">Title</option>
+              <option value="members">Members</option>
+              <option value="favorites">Favorites</option>
+              <option value="episodes">Episodes</option>
+              <option value="start_date">Start Date</option>
+            </select>
+          </div>
+          <div className="filter-item">
+            <div style={{ fontSize: '10px', fontWeight: 'bold', marginBottom: '3px' }}>Order:</div>
+            <select value={searchParams.get('sort') || 'desc'} onChange={(e) => handleFilterChange('sort', e.target.value)} style={{ width: '100%', fontSize: '10px' }}>
+              <option value="desc">Descending</option>
+              <option value="asc">Ascending</option>
+            </select>
+          </div>
+          <div className="filter-item filter-item-wide">
+            <div style={{ fontSize: '10px', fontWeight: 'bold', marginBottom: '3px' }}>Score Range:</div>
+            <div style={{ display: 'flex', gap: '3px', alignItems: 'center' }}>
+              <input type="number" min="0" max="10" step="0.5" value={searchParams.get('min_score') || ''} onChange={(e) => handleFilterChange('min_score', e.target.value)} placeholder="Min" style={{ width: '45%', fontSize: '10px' }} />
+              <span style={{ fontSize: '10px' }}>-</span>
+              <input type="number" min="0" max="10" step="0.5" value={searchParams.get('max_score') || ''} onChange={(e) => handleFilterChange('max_score', e.target.value)} placeholder="Max" style={{ width: '45%', fontSize: '10px' }} />
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Anime Grid */}
       <AnimeGrid animeList={animeList} />
       
-      {/* Pagination */}
       {animeList.length > 0 && (
         <Pagination
           currentPage={page}
@@ -206,6 +189,47 @@ function GenreContent() {
           basePath={`/genre/${genreId}`}
         />
       )}
+
+      <style jsx>{`
+        .filter-grid {
+          display: grid;
+          grid-template-columns: repeat(6, 1fr);
+          gap: 5px;
+          background: #eee;
+          border: 1px solid #ccc;
+          padding: 5px;
+        }
+
+        .filter-item {
+          background: white;
+          border: 1px solid #ddd;
+          padding: 5px;
+        }
+
+        .filter-item-wide {
+          grid-column: span 2;
+        }
+
+        @media (max-width: 768px) {
+          .filter-grid {
+            grid-template-columns: repeat(3, 1fr);
+          }
+
+          .filter-item-wide {
+            grid-column: span 3;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .filter-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+
+          .filter-item-wide {
+            grid-column: span 2;
+          }
+        }
+      `}</style>
     </div>
   );
 }

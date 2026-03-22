@@ -263,3 +263,84 @@ table tr:nth-child(even) {
     transform: translateY(-5px);
   }
 }
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  body {
+    font-size: 13px;
+  }
+
+  .container {
+    padding: 0 5px;
+  }
+
+  .content-box {
+    padding: 8px;
+    margin-bottom: 10px;
+  }
+
+  .header-box {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table th,
+  table td {
+    padding: 3px 5px;
+    font-size: 11px;
+  }
+
+  input[type="text"],
+  input[type="search"],
+  input[type="password"],
+  input[type="email"],
+  input[type="number"],
+  select {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  button,
+  .btn {
+    font-size: 13px;
+    padding: 6px 12px;
+  }
+
+  .info-row {
+    flex-direction: column;
+  }
+
+  .info-label {
+    width: 100%;
+    margin-bottom: 2px;
+  }
+
+  .info-value {
+    padding-left: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 14px;
+  }
+
+  .header-box {
+    font-size: 11px;
+    padding: 5px 6px;
+  }
+
+  h1 {
+    font-size: 16px;
+  }
+
+  h2 {
+    font-size: 14px;
+  }
+}

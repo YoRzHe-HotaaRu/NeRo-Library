@@ -24,24 +24,28 @@ export default function AnimeGrid({ animeList, title }: AnimeGridProps) {
           {title}
         </div>
       )}
-      <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '5px' }}>
-        <tbody>
-          {Array.from({ length: Math.ceil(animeList.length / 3) }).map((_, rowIndex) => (
-            <tr key={rowIndex}>
-              {animeList.slice(rowIndex * 3, rowIndex * 3 + 3).map((anime) => (
-                <td key={anime.mal_id} style={{ width: '33%', verticalAlign: 'top', border: 'none', padding: '0' }}>
-                  <AnimeCard anime={anime} />
-                </td>
-              ))}
-              {animeList.slice(rowIndex * 3, rowIndex * 3 + 3).length < 3 && 
-                Array.from({ length: 3 - animeList.slice(rowIndex * 3, rowIndex * 3 + 3).length }).map((_, i) => (
-                  <td key={`empty-${i}`} style={{ width: '33%', border: 'none', padding: '0' }}></td>
-                ))
-              }
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="anime-grid">
+        {animeList.map((anime, index) => (
+          <div key={`${anime.mal_id}-${index}`} className="anime-grid-item">
+            <AnimeCard anime={anime} />
+          </div>
+        ))}
+      </div>
+
+      <style jsx>{`
+        .anime-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 8px;
+        }
+
+        @media (max-width: 600px) {
+          .anime-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 5px;
+          }
+        }
+      `}</style>
     </div>
   );
 }
