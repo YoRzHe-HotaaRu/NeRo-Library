@@ -318,6 +318,47 @@ export default function AnimeDetailsPage() {
                   <div className="info-value">{anime.rating}</div>
                 </div>
               )}
+
+              {/* Members & Favorites */}
+              {(anime.members || anime.favorites) && (
+                <div style={{ 
+                  marginTop: '10px', 
+                  padding: '10px', 
+                  background: '#f9f9f9', 
+                  border: '1px solid #ddd',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: '40px',
+                  fontSize: '10px'
+                }}>
+                  {anime.members && (
+                    <div style={{ textAlign: 'center' }}>
+                      <svg width="24" height="24" viewBox="0 0 30 30" style={{ display: 'block', margin: '0 auto' }}>
+                        <circle cx="15" cy="10" r="5" fill="#669966">
+                          <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite" />
+                        </circle>
+                        <path d="M5 25 Q15 18 25 25" fill="#669966" opacity="0.5">
+                          <animate attributeName="d" values="M5 25 Q15 25 25 25;M5 25 Q15 18 25 25;M5 25 Q15 25 25 25" dur="2s" repeatCount="indefinite" />
+                        </path>
+                      </svg>
+                      <div style={{ fontWeight: 'bold', marginTop: '3px' }}>{(anime.members / 1000).toFixed(0)}K</div>
+                      <div style={{ color: '#666' }}>Members</div>
+                    </div>
+                  )}
+                  {anime.favorites && (
+                    <div style={{ textAlign: 'center' }}>
+                      <svg width="24" height="24" viewBox="0 0 30 30" style={{ display: 'block', margin: '0 auto' }}>
+                        <path d="M15 25 L5 15 Q5 5 15 10 Q25 5 25 15 Z" fill="#cc3333">
+                          <animate attributeName="transform" type="scale" values="1;1.1;1" dur="1s" repeatCount="indefinite" additive="sum" />
+                        </path>
+                      </svg>
+                      <div style={{ fontWeight: 'bold', color: '#cc3333', marginTop: '3px' }}>{(anime.favorites / 1000).toFixed(1)}K</div>
+                      <div style={{ color: '#666' }}>Favorites</div>
+                    </div>
+                  )}
+                </div>
+              )}
             </td>
           </tr>
         </tbody>
